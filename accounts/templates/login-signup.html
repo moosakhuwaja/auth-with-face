@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login & Signup</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <!-- msg style  -->
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f4f7ff;
+        overflow: hidden;
+      }
+
+      .toast {
+        position: absolute;
+        top: 25px;
+        right: 30px;
+        border-radius: 12px;
+        background: #fff;
+        padding: 20px 35px 20px 25px;
+        box-shadow: 0 6px 20px -5px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transform: translateX(calc(100% + 30px));
+        transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.35);
+      }
+
+      .toast.active {
+        transform: translateX(0%);
+      }
+
+      .toast .toast-content {
+        display: flex;
+        align-items: center;
+      }
+
+      .toast-content .check {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 35px;
+        min-width: 35px;
+        background-color: #4070f4;
+        color: #fff;
+        font-size: 20px;
+        border-radius: 50%;
+      }
+
+      .toast-content .message {
+        display: flex;
+        flex-direction: column;
+        margin: 0 20px;
+      }
+
+      .message .text {
+        font-size: 16px;
+        font-weight: 400;
+        color: #666666;
+      }
+
+      .message .text.text-1 {
+        font-weight: 600;
+        color: #333;
+      }
+
+      .toast .close {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        padding: 5px;
+        cursor: pointer;
+        opacity: 0.7;
+      }
+
+      .toast .close:hover {
+        opacity: 1;
+      }
+
+      .toast .progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        width: 100%;
+      }
+
+      .toast .progress:before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        height: 100%;
+        width: 100%;
+        background-color: #4070f4;
+      }
+
+      .progress.active:before {
+        animation: progress 5s linear forwards;
+      }
+
+      @keyframes progress {
+        100% {
+          right: 100%;
+        }
+      }
+
+      button {
+        padding: 12px 20px;
+        font-size: 20px;
+        outline: none;
+        border: none;
+        background-color: #4070f4;
+        color: #fff;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      button:hover {
+        background-color: #0e4bf1;
+      }
+
+      .toast.active ~ button {
+        pointer-events: none;
+      }
+    </style>
+    <style>
+      /* General Reset */
+      body,
+      h2,
+      p,
+      input,
+      button {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #6c63ff, #4adede, #ff6584);
+        background-size: 300% 300%;
+        animation: gradient-bg 8s infinite;
+      }
+
+      /* Gradient Animation */
+      @keyframes gradient-bg {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      /* Main Container */
+      .main-container {
+        width: 100%;
+        max-width: 400px;
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Form Wrapper */
+      .form-wrapper {
+        overflow: hidden;
+        position: relative;
+      }
+
+      .form-content {
+        display: flex;
+        transition: transform 0.6s ease-in-out;
+        width: 200%;
+      }
+
+      .form {
+        width: 50%;
+        padding: 30px;
+        background: white;
+        border-radius: 10px;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.6s ease;
+      }
+
+      .form.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      h2 {
+        margin-bottom: 10px;
+        font-weight: 600;
+        color: #333;
+        font-size: 24px;
+      }
+
+      p {
+        font-size: 14px;
+        color: #777;
+        margin-bottom: 20px;
+      }
+
+      .input-group {
+        position: relative;
+        margin-bottom: 20px;
+      }
+
+      .input-group input {
+        width: 100%;
+        padding: 10px 40px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+
+      .input-group .input-icon {
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        transform: translateY(-50%);
+        font-size: 16px;
+        color: #aaa;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 12px 0;
+        border: none;
+        border-radius: 5px;
+        background: linear-gradient(120deg, #6c63ff, #ff6584);
+        color: white;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .btn:hover {
+        background: linear-gradient(120deg, #ff6584, #4adede);
+      }
+
+      .switch-text {
+        text-align: center;
+        font-size: 13px;
+        color: #555;
+      }
+
+      .switch-text .toggle-form {
+        color: #6c63ff;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .switch-text .toggle-form:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main-container">
+      <div class="form-wrapper">
+        <div class="form-content">
+          <!-- Login Form -->
+          <form class="form login-form active" method="post" autocomplete="off">
+            {% csrf_token %}
+            <h2>Welcome Back!</h2>
+            <p>Login to your account to continue</p>
+
+            <input type="hidden" name="captured_image" id="login-image_data" required />
+
+            <div style="text-align: center; margin-top: 15px">
+              <button type="button" id="login-start-camera-btn">Take Photo</button>
+              <button type="button" id="login-capture-btn" style="display: none">Capture</button>
+              <button type="button" id="login-view-image-btn" style="display: none">View Image</button>
+              <button type="button" id="login-retake-btn" style="display: none">Retake</button>
+            </div>
+
+            <div id="login-my_camera" style="display: none; text-align: center; margin-top: 15px"></div>
+            <div id="login-results" style="display: none; text-align: center; margin-top: 15px"></div>
+
+            <button type="submit" class="btn" name="login">Login</button>
+            <p class="switch-text">
+              Don’t have an account? <span class="toggle-form">Sign Up</span>
+            </p>
+          </form>
+
+          <!-- Signup Form -->
+          <form class="form signup-form" method="post" autocomplete="off">
+            {% csrf_token %}
+            <h2>Create Account</h2>
+            <p>Sign up to explore new opportunities</p>
+
+            <div class="input-group">
+              <input type="text" name="username" placeholder="Username" required />
+              <span class="input-icon">👤</span>
+            </div>
+
+            <div class="input-group">
+              <input type="email" name="email" placeholder="Email" required />
+              <span class="input-icon">📧</span>
+            </div>
+
+            <div class="input-group">
+              <input type="text" name="cnic" placeholder="CNIC" required />
+              <span class="input-icon">🆔</span>
+            </div>
+
+            <div class="input-group">
+              <input type="password" name="password" placeholder="Password" required />
+              <span class="input-icon">🔒</span>
+            </div>
+
+            <div class="input-group">
+              <input type="password" name="confirm_password" placeholder="Confirm Password" required />
+              <span class="input-icon">🔒</span>
+            </div>
+
+            <input type="hidden" name="captured_image" id="signup-image_data" required />
+
+            <div style="text-align: center; margin-top: 15px">
+              <button type="button" id="signup-start-camera-btn">Take Photo</button>
+              <button type="button" id="signup-capture-btn" style="display: none">Capture</button>
+              <button type="button" id="signup-view-image-btn" style="display: none">View Image</button>
+              <button type="button" id="signup-retake-btn" style="display: none">Retake</button>
+            </div>
+
+            <div id="signup-my_camera" style="display: none; text-align: center; margin-top: 15px"></div>
+            <div id="signup-results" style="display: none; text-align: center; margin-top: 15px"></div>
+
+            <button type="submit" class="btn" name="signup">Sign Up</button>
+            <p class="switch-text">Already have an account? <span class="toggle-form">Login</span></p>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    {% if messages %}
+    <div class="toast active">
+      <div class="toast-content">
+        {% for message in messages %}
+        {% if message.tags == "success" %}
+        <i class="fas fa-check check"></i>
+        {% elif message.tags == "error" %}
+        <i class="fas fa-times check"></i>
+        {% elif message.tags == "info" %}
+        <i class="fas fa-info-circle check"></i>
+        {% else %}
+        <i class="fas fa-exclamation-triangle check"></i>
+        {% endif %}
+        <div class="message">
+          <li class="text text-1">{{ message }}</li>
+        </div>
+        {% endfor %}
+      </div>
+      <i class="fa-solid fa-xmark close"></i>
+      <div class="progress active"></div>
+    </div>
+    {% endif %}
+
+    <!-- Webcam + Camera Logic -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
+    <script>
+      function initCameraHandlers(prefix) {
+        const cameraDiv = document.getElementById(`${prefix}-my_camera`);
+        const resultsDiv = document.getElementById(`${prefix}-results`);
+        const captureBtn = document.getElementById(`${prefix}-capture-btn`);
+        const startBtn = document.getElementById(`${prefix}-start-camera-btn`);
+        const viewImageBtn = document.getElementById(`${prefix}-view-image-btn`);
+        const retakeBtn = document.getElementById(`${prefix}-retake-btn`);
+        const imageDataInput = document.getElementById(`${prefix}-image_data`);
+
+        let snapshotData = "";
+
+        startBtn.addEventListener("click", () => {
+          Webcam.set({
+            width: 320,
+            height: 240,
+            image_format: "jpeg",
+            jpeg_quality: 90,
+          });
+          Webcam.attach(`#${prefix}-my_camera`);
+          cameraDiv.style.display = "block";
+          captureBtn.style.display = "inline-block";
+          startBtn.style.display = "none";
+          resultsDiv.style.display = "none";
+          viewImageBtn.style.display = "none";
+          retakeBtn.style.display = "none";
+        });
+
+        captureBtn.addEventListener("click", () => {
+          Webcam.snap(function (data_uri) {
+            snapshotData = data_uri;
+            imageDataInput.value = data_uri;
+            Webcam.reset();
+            cameraDiv.style.display = "none";
+            captureBtn.style.display = "none";
+            viewImageBtn.style.display = "inline-block";
+            retakeBtn.style.display = "inline-block";
+          });
+        });
+
+        viewImageBtn.addEventListener("click", () => {
+          resultsDiv.innerHTML = `<img src="${snapshotData}" alt="Captured Image" style="max-width: 100%;" />`;
+          resultsDiv.style.display = "block";
+        });
+
+        retakeBtn.addEventListener("click", () => {
+          Webcam.attach(`#${prefix}-my_camera`);
+          cameraDiv.style.display = "block";
+          captureBtn.style.display = "inline-block";
+          resultsDiv.style.display = "none";
+          viewImageBtn.style.display = "none";
+          retakeBtn.style.display = "none";
+        });
+
+        // Prevent form submission without image
+        const form = imageDataInput.closest("form");
+        form.addEventListener("submit", function (e) {
+          if (!imageDataInput.value) {
+            alert("Please capture a photo before submitting.");
+            e.preventDefault();
+          }
+        });
+      }
+
+      // Initialize both login and signup handlers
+      initCameraHandlers("login");
+      initCameraHandlers("signup");
+    </script>
+
+    <!-- Toast Notification -->
+    <script>
+      const toast = document.querySelector(".toast");
+      const progress = document.querySelector(".progress");
+      const closeIcon = document.querySelector(".close");
+
+      let timer1, timer2;
+
+      if (toast) {
+        timer1 = setTimeout(() => toast.classList.remove("active"), 5000);
+        timer2 = setTimeout(() => progress.classList.remove("active"), 5300);
+
+        closeIcon.addEventListener("click", () => {
+          toast.classList.remove("active");
+          setTimeout(() => progress.classList.remove("active"), 300);
+          clearTimeout(timer1);
+          clearTimeout(timer2);
+        });
+      }
+    </script>
+
+    <!-- Toggle Login/Signup -->
+    <script>
+      const toggleButtons = document.querySelectorAll(".toggle-form");
+      const formContent = document.querySelector(".form-content");
+      const loginForm = document.querySelector(".login-form");
+      const signupForm = document.querySelector(".signup-form");
+
+      toggleButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          loginForm.classList.toggle("active");
+          signupForm.classList.toggle("active");
+
+          if (signupForm.classList.contains("active")) {
+            formContent.style.transform = "translateX(-50%)";
+          } else {
+            formContent.style.transform = "translateX(0%)";
+          }
+
+          // Reset webcam if still attached
+          Webcam.reset();
+        });
+      });
+    </script>
+  </body>
+</html>

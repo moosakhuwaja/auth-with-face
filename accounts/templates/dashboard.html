@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body,
+      h2,
+      p,
+      input,
+      button {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #6c63ff, #4adede, #ff6584);
+        background-size: 300% 300%;
+        animation: gradient-bg 8s infinite;
+      }
+
+      /* Gradient Animation */
+      @keyframes gradient-bg {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: 400px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #555;
+            margin: 8px 0;
+        }
+        a, button {
+            display: block;
+            margin-top: 15px;
+            padding: 10px;
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        a:hover, button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome, {{ user.username }}</h1>
+        <p>Email: {{ user.email }}</p>
+        <p>CNIC: {{ user.cnic }}</p>
+        <img src="{{ user.user_image.url }}" alt="User Image">
+
+        <a href="{% url 'logout' %}">Logout</a>
+        <a href="{% url 'deactive' %}">Deactivate Account</a>
+    </div>
+</body>
+</html>
