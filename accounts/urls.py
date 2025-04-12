@@ -7,5 +7,8 @@ urlpatterns = [
     path('login-signup/', views.login_signup, name='login-signup'),
     path('dashboard/', views.dashboard, name='dashboard-page'),
     path('logout/', views.logout, name='logout'),
-    path('deactive/', views.deactive, name='deactive')
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('deactive/', views.deactive, name='deactive'),
+    path('detect-face/', views.detect_face_ajax, name='detect-face'),
+
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
