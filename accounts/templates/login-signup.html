@@ -379,22 +379,35 @@
 
       let snapshotData = "";
       let faceDetected = false;
+      let cameraInitialized = false; // Track if the camera is initialized
 
       // Start the camera when the button is clicked
       startBtn.addEventListener("click", () => {
-        Webcam.set({
-          width: 320,
-          height: 240,
-          image_format: "jpeg",
-          jpeg_quality: 90,
-        });
-        Webcam.attach(`#${prefix}-my_camera`);
-        cameraDiv.style.display = "block";
-        captureBtn.style.display = "inline-block";
-        startBtn.style.display = "none";
-        resultsDiv.style.display = "none";
-        viewImageBtn.style.display = "none";
-        retakeBtn.style.display = "none";
+        if (!cameraInitialized) {
+          // Set webcam settings
+          Webcam.set({
+            width: 320,
+            height: 240,
+            image_format: "jpeg",
+            jpeg_quality: 90,
+          });
+
+          // Wait for 2 seconds before attaching webcam
+          setTimeout(() => {
+            try {
+              Webcam.attach(`#${prefix}-my_camera`);
+              cameraInitialized = true; // Mark camera as initialized
+              cameraDiv.style.display = "block";
+              captureBtn.style.display = "inline-block";
+              startBtn.style.display = "none";
+              resultsDiv.style.display = "none";
+              viewImageBtn.style.display = "none";
+              retakeBtn.style.display = "none";
+            } catch (error) {
+              console.error("Webcam attachment failed:", error);
+            }
+          }, 2000);
+        }
       });
 
       // Capture image on button click
@@ -457,7 +470,11 @@
       // Start the face detection loop
       let detectionInterval;
       startBtn.addEventListener('click', () => {
-        detectionInterval = setInterval(detectFace, 1000); // Detect every 2 seconds
+        // First, delay the first call of detectFace by 3 seconds
+        setTimeout(() => {
+          detectFace(); // First call after 3 seconds
+          detectionInterval = setInterval(detectFace, 1000); // Then call detectFace every 3 seconds
+        }, 3500);
       });
 
       // Stop detection after capturing
@@ -467,8 +484,12 @@
     }
 
     // Initialize both login and signup handlers
-    initCameraHandlers("login");
-    initCameraHandlers("signup");
+    document.addEventListener('DOMContentLoaded', function () {
+      initCameraHandlers("login");
+      initCameraHandlers("signup");
+    });
+
+
   </script>
 
 
