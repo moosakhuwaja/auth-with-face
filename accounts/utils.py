@@ -62,13 +62,7 @@ def find_user_by_face(image_data, users):
 
     return None  # No match
 
-
 def detect_face_in_image(image_data):
-    # Convert the base64 image data to bytes
-    import base64
-    from io import BytesIO
-    from PIL import Image
-
     # Remove the prefix from base64 data
     image_data = image_data.split(',')[1]
     image_bytes = base64.b64decode(image_data)
